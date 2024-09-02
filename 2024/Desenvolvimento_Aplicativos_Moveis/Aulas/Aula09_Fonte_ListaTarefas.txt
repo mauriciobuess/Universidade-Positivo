@@ -1,0 +1,115 @@
+
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.lifecycle.ViewModel
+import com.up_des_mobile.listatarefas.ui.theme.ListaTarefasTheme
+
+class MainActivity : ComponentActivity() {
+
+    private val viewModel: TaskListViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("Ciclo de Vida", "onCreate chamada")
+        logTasks("onCreate")
+
+        setContent {
+            ListaTarefasTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    TaskListScreen(viewModel)
+                }
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Ciclo de Vida", "onStart chamada")
+        logTasks("onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("Ciclo de Vida", "onResume chamada")
+        logTasks("onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("Ciclo de Vida", "onPause chamada")
+        logTasks("onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("Ciclo de Vida", "onStop chamada")
+        logTasks("onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("Ciclo de Vida", "onDestroy chamada")
+        logTasks("onDestroy")
+    }
+
+    private fun logTasks(stage: String) {
+        Log.d("Lista de Tarefas", "Lista de Tarefas $stage: ${viewModel.tasks.joinToString()}")
+    }
+}
+
+class TaskListViewModel : ViewModel() {
+    // Lista de estados mutáveis ​​para rastrear tarefas
+    private val _tasks = mutableStateListOf<String>()
+    val tasks: List<String> get() = _tasks
+
+    fun addTask() {
+        val taskDescription = "Tarefa ${_tasks.size + 1}"
+        _tasks.add(taskDescription)
+    }
+}
+
+@Composable
+fun TaskListScreen(viewModel: TaskListViewModel) {
+    // Observe as tarefas do ViewModel
+    val tasks by remember { derivedStateOf { viewModel.tasks } }
+
+    Column {
+        Button(onClick = {
+            viewModel.addTask()
+        }) {
+            Text("Inclui Tarefa")
+        }
+        // Displaying the list of tasks
+        Text(text = "Lista de Tarefas:")
+        LazyColumn {
+            items(tasks) { task ->
+                Text(text = task)
+            }
+        }
+    }
+
+    // Registrar tarefas quando a lista de tarefas muda
+    LaunchedEffect(tasks) {
+        Log.d("Lista de Tarefas", "Tarefas atuais: ${tasks.joinToString()}")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    ListaTarefasTheme {
+        TaskListScreen(viewModel = TaskListViewModel())
+    }
+}
