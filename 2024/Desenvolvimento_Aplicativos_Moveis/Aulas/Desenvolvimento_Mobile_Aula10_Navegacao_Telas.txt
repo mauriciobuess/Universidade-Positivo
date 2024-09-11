@@ -1,0 +1,139 @@
+//MainActivity.kt
+package com.ti4all.navegacaoemtelas
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.ti4all.navegacaoemtelas.ui.theme.NavegacaoEmTelasTheme
+import com.ti4all.navegacaoemtelas.view.Tela01
+import com.ti4all.navegacaoemtelas.view.Tela02
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            NavegacaoEmTelasTheme {
+                // variável navController que receberá rememberNavController
+                val navController = rememberNavController()
+                // configuração do NavHost que vai trabalhar com a
+                // variável navController e vai iniciar na Tela01
+                NavHost(navController = navController, startDestination = "Tela01") {
+                    // configuração da função composable
+                    // que vai montar a "pilha" de navegação
+                    // 1a. rota (ou tela)
+                    composable(
+                        route = "Tela01"
+                    ) {
+                        Tela01(navController)
+                    }
+                    // 2a. rota (ou tela)
+                    composable(
+                        route = "Tela02"
+                    ) {
+                        Tela02(navController)
+                    }
+                }
+            }
+        }
+    }
+}
+
+//----------------------------------------------------------
+// Tela01.kt
+
+package com.ti4all.navegacaoemtelas.view
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+
+@Composable
+fun Tela01(navController: NavController) {
+    Box(modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
+    ){
+        Column(horizontalAlignment = Alignment.CenterHorizontally
+              ,verticalArrangement = Arrangement.Center
+              ,modifier = Modifier.padding(100.dp)
+        ) {
+            Text(text = "Tela 01"
+                ,color = Color.Blue
+                ,fontSize = 30.sp)
+        }
+    }
+    Box(modifier = Modifier.fillMaxSize()
+        ,contentAlignment = Alignment.Center
+    ) {
+        Column() {
+            Button(onClick = { navController.navigate("Tela02") }) {
+                Text("Vá para Tela 02")
+            }
+        }
+    }
+}
+
+//-----------------------
+// Tela02.kt
+package com.ti4all.navegacaoemtelas.view
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+
+@Composable
+fun Tela02(navController: NavController) {
+    Box(modifier = Modifier.fillMaxSize()
+       ,contentAlignment = Alignment.TopCenter
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally
+            ,verticalArrangement = Arrangement.Center
+            ,modifier = Modifier.padding(100.dp)) {
+            Text(text = "Tela 02"
+                ,color = Color.Blue
+                ,fontSize = 30.sp)
+        }
+    }
+    Box(modifier = Modifier.fillMaxSize()
+       ,contentAlignment = Alignment.Center
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Button(onClick = { navController.navigate("Tela01") }) {
+                Text("Vá para Tela 01")
+            }
+        }
+    }
+}
