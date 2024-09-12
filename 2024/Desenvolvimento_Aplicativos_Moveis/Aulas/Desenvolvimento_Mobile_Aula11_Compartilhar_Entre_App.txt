@@ -1,0 +1,45 @@
+//
+// Aula 11 - Compartilhar Entre Apps
+//
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            EnviarMsg()
+        }
+    }
+}
+
+@Composable
+fun EnviarMsg() {
+    val context = LocalContext.current
+    var subject by remember { mutableStateOf("Veja!") }
+    var summary by remember { mutableStateOf("Teste 1,2,3...") }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Button(onClick = {
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, subject)
+                putExtra(Intent.EXTRA_TEXT, summary)
+            }
+            context.startActivity(Intent.createChooser(intent, "Compartilhe"))
+        }) {
+            Text("Conteúdo compartilhado")
+        }
+    }
+}
+
+//---------------------------------
